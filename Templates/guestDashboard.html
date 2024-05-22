@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+        <meta name="description" content>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link
+            href="{{url_for('static' , filename = '/Style/bootstrap.css')}}"
+            rel="stylesheet">
+        <style>
+            body{
+                background-color: rgb(255, 216, 87);
+            }
+            .centerContainer{
+                background-color: aqua;
+                padding: 2%;
+                position: absolute;
+                left: 50%;
+                bottom: 50%;
+                transform: translate(-50%,50%);
+            }
+            .linkBtn {
+                padding: 14px 25px;
+                text-align: center;
+                text-decoration: none;
+                display: inline-block;
+                border-radius: 5px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="jumbotron">
+            <div class="row">
+                <div class="col-1 text-left">
+                    <a style="background-color: rgb(255, 0, 0);color: white;"
+                        class="linkBtn" href="{{ url_for('logout') }}"> Logout
+                    </a>
+                </div>
+                <div class="col-2">
+                    {% if search == 1 %}
+                        <a style="background-color: rgb(255, 0, 0);color: white;"
+                            class="linkBtn" href="{{ url_for('Guest') }}"> Home
+                        </a>
+                    {% endif %}
+                </div>
+                <div class="col-6 text-center">
+                    <h1>Welcome</h1>
+                </div>
+                <div class="col-1"></div>
+                <div class="col-2" style="text-align: right; margin-right: 0%;">
+                    <h6>
+                        User Name
+                    </h6>
+                    <h4>
+                        {{user.userName}}
+                    </h4>
+                </div>
+            </div>
+        </div>
+        <hr style="margin-top:-0.5em;margin-bottom: 0em;">
+        <div class="row" style="margin-top: 0em;">
+            <div class="col-1">
+                <a class="linkBtn" style="background-color: green;color: white;" 
+                href="{{url_for('reload')}}">
+                    reload
+                </a>
+            </div>
+            <div class="col-2">
+                <a href="{{url_for('CreatePlaylist')}}" class="linkBtn" 
+                style="background-color: rgb(21, 18, 168);color: white;">
+                Create Playlist
+            </a>
+            </div>
+            <div class="col-6 text-center" style="color: red;">{{message}}</div>
+            <div class="col-3" style="text-align: right;">
+                <form action="{{url_for('Guest')}}" method="POST" style="height: 100%;">
+                    <input type="text" name="query" placeholder="search..." style="height: 100%;" required />
+                    <input type="submit" style="height: 100%;" value="search" />
+                </form>
+            </div>
+        </div>
+        <hr style="margin-top:-0em;margin-bottom: 0em;">
+        <br><br>
+        <div class="container">
+            <hr style="margin-top:-0em;margin-bottom: 0em;">
+            <br>
+            {% set songs = user.songs[:15] if search == 0 else searchResults[0] %}
+            <div class="row">
+                <h3> Songs </h3>
+                {% if songs == [] %}
+                <br>
+                <h5> No Songs </h5>
+                {% endif %}
+            </div>
+            <div class="row text-center">
+                {% for i in songs %}
+                <div class="col-4" style="margin-bottom: 1%;">
+                    <div class="card">
+                        <div class="card-head">
+                            {{i.songName}}
+                        </div>
+                    </div>
+                    <div class="card-body" style="background-color: #e8e4c9;">
+                        Rating : {{i.songRating}}
+                        <br>
+                        Language : {{i.Language}}
+                        <br>
+                        <br>
+                        <form action="{{url_for('Player',songName = i.songName)}}" method="POST">
+                            <input name="songId" value="{{i.songId}}" hidden>
+                            <input type="submit" value="Play">
+                        </form>
+                        <br>
+                    </div>
+                </div>
+                <br>
+                {% endfor %}
+            </div>
+            <br>
+            <hr style="margin-top:-0em;margin-bottom: 0em;">
+            <br>
+            {% set lyrics = user.lyrics[:15] if search == 0 else searchResults[1] %}
+            <div class="row">
+                <h3> Lyrics </h3>
+                {% if lyrics == [] %}
+                <br>
+                <h5> No Lyrics </h5>
+                {% endif %}
+            </div>
+            <div class="row text-center">
+                {% for i in lyrics %}
+                <div class="col-4" style="margin-bottom: 1%;">
+                    <div class="card">
+                        <div class="card-head">
+                            {{i.lyricsName}}
+                        </div>
+                    </div>
+                    <div class="card-body" style="background-color: #e8e4c9;">
+                        Rating : {{i.lyricsRating}}
+                        <br>
+                        Language : {{i.Language}}
+                        <br>
+                        <br>
+                        <form action="{{url_for('Reader',lyricsName = i.lyricsName)}}" method="POST">
+                            <input name="lyricsId" value="{{i.lyricsId}}" hidden>
+                            <input type="submit" value="Read">
+                        </form>
+                        <br>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <br>
+            <hr style="margin-top:-0em;margin-bottom: 0em;">
+            <br>
+            {% set albums = user.albums[:15] if search == 0 else searchResults[2] %}
+            <div class="row">
+                <h3> Albums </h3>
+                {% if albums == [] %}
+                <br>
+                <h5> No Albums </h5>
+                {% endif %}
+            </div>
+            <div class="row text-center">
+                {% for i in albums %}
+                <div class="col-4" style="margin-bottom: 1%;">
+                    <div class="card">
+                        <div class="card-head">
+                            {{i.albumName}}
+                        </div>
+                    </div>
+                    <div class="card-body" style="background-color: #e8e4c9;">
+                        Rating : {{i.albumRating}}
+                        <br>
+                        Genre : {{i.Genre}}
+                        <br>
+                        <br>
+                        <form action="{{url_for('AlbumMaster',albumName = i.albumName)}}" method="POST">
+                            <input name="albumId" value="{{i.albumId}}" hidden>
+                            <input name="Songs" value="{{i.Songs}}" hidden>
+                            <input type="submit" value="Play">
+                        </form>
+                        <br>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <br>
+            <hr style="margin-top:-0em;margin-bottom: 0em;">
+            <br>
+            {% if search != 1 %}
+            <div>
+                <div class="row">
+                    <h3> Playlists </h3>
+                    {% if user.playlists == [] %}
+                    <br>
+                    <h5> No Playlists </h5>
+                    {% endif %}
+                </div>
+                <div class="row text-center">
+                    {% for i in user.playlists %}
+                    <div class="col-4" style="margin-bottom: 1%;">
+                        <div class="card">
+                            <div class="card-head">
+                                {{i.playlistName}}
+                            </div>
+                        </div>
+                            <div class="card-body" style="background-color: #e8e4c9;">
+                                <br>
+                                <form action="{{url_for('editPlaylist',playlistName = i.playlistName)}}" method="POST">
+                                    <input name="playlistId" value="{{i.playlistId}}" hidden>
+                                    <input name="from" value="home" hidden>
+                                    <input type="submit" value="Edit">
+                                </form>
+                                <br>
+                                <form action="{{url_for('deletePlaylist',playlistName = i.playlistName)}}" method="POST">
+                                    <input name="playlistId" value="{{i.playlistId}}" hidden>
+                                    <input type="submit" value="Delete">
+                                </form>
+                                <br>
+                                <form action="{{url_for('PlaylistMaster',playlistName = i.playlistName)}}" method="POST">
+                                    <input name="playlistId" value="{{i.playlistId}}" hidden>
+                                    <input name="Songs" value="{{i.Songs}}" hidden>
+                                    <input type="submit" value="Play">
+                                </form>
+                            <br>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <br>
+                <hr style="margin-top:-0em;margin-bottom: 0em;">
+                <br>
+            </div>
+            {% endif %}
+        </div>
+    </body>
+</html>

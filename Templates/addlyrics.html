@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title> Add Lyrics </title>
+        <meta name="description" content>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link
+            href="{{url_for('static' , filename = '/Style/bootstrap.css')}}"
+            rel="stylesheet">
+        <style>
+            body{
+                background-color: rgb(255, 216, 87);
+            }
+            .centerContainer{
+                background-color: aqua;
+                padding: 2%;
+                position: absolute;
+                border-radius: 7%;
+                left: 50%;
+                bottom: 50%;
+                transform: translate(-50%,50%);
+            }
+            .linkBtn {
+                padding: 14px 25px;
+                background-color: green;
+                color: white;
+                text-align: center;
+                text-decoration: none;
+                display: inline-block;
+                border-radius: 5px;
+            }
+            .data{
+                background-color: aqua;
+                border-radius: 50%;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="jumbotron">
+            <div class="row">
+                <div class="col-2 text-left">
+                    <a style="background-color: rgb(255, 0, 0);color: white;"
+                        class="linkBtn" href="{{ url_for('logout') }}"> Logout
+                    </a>
+                </div>
+                <div class="col-2">
+                    <a
+                        style="background-color: rgb(0, 255, 13);color: rgb(0, 0, 0);"
+                        class="linkBtn" href="{{ url_for('Creator') }}"> Back
+                    </a>
+                </div>
+                <div class="col-4 text-center">
+                    <h1>Creator</h1>
+                </div>
+                <div class="col-2"></div>
+                <div class="col-2" style="text-align: right; margin-right: 0%;">
+                    <h6>
+                        User Name
+                    </h6>
+                    <h4>
+                        {{user.userName}}
+                    </h4>
+                </div>
+            </div>
+        </div>
+        <hr style="margin-top: -0.5em;">
+        <h1 class="text-center">Add Lyrics</h1>
+        <div class="centerContainer">
+            <form action="{{url_for('AddLyrics')}}" method="POST"
+                enctype="multipart/form-data">
+                <div style="text-align: right;">
+                    <label for="lyricsName">Lyrics Name:</label>
+                    <input type="text" id="lyricsName" name="lyricsName" required>
+                    <br>
+                    <label for="Language">Language:</label>
+                    <input type="text" id="Language" name="Language" required>
+                    <br>
+                </div>
+                <br>
+                <div class="text-center">
+                    <div>
+                        <label for="file">Media(.txt)</label>
+                        <input type="file" id="file" name="file" accept="audio/plain"
+                            required>
+                    </div>
+                    <br>
+                    <div style="color: red;">
+                        {% if message %}
+                        {{message}}
+                        <br>
+                        {{message2}}
+                        <br>
+                        {% endif %}
+                    </div>
+                    <input type="submit" value="Upload">
+                </div>
+            </form>
+        </div>
+    </body>
+</html>

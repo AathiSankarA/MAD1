@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title> Creator </title>
+        <meta name="description" content>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link
+            href="{{url_for('static' , filename = '/Style/bootstrap.css')}}"
+            rel="stylesheet">
+        <style>
+            body{
+                background-color: rgb(255, 216, 87);
+            }
+            .centerContainer{
+                background-color: aqua;
+                border-radius: 4%;
+                padding: 2%;
+                left: 50%;
+                bottom: 50%;
+                transform: translate(-50%,50%);
+            }
+            .linkBtn {
+                padding: 14px 25px;
+                background-color: green;
+                color: white;
+                text-align: center;
+                text-decoration: none;
+                display: inline-block;
+                border-radius: 5px;
+            }
+            .data{
+                background-color: aqua;
+                border-radius: 50%;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="jumbotron">
+            <div class="row">
+                <div class="col-2 text-left">
+                    <a style="background-color: rgb(255, 0, 0);color: white;"
+                        class="linkBtn" href="{{ url_for('logout') }}"> Logout
+                    </a>
+                </div>
+                <div class="col-8 text-center">
+                </div>
+                <div class="col-2" style="text-align: right; margin-right: 0%;">
+                    <h6>
+                        User Name
+                    </h6>
+                    <h4>
+                        {{user.userName}}
+                    </h4>
+                </div>
+            </div>
+        </div>
+        <hr style="margin-top: -0.5em; margin-bottom: 0%;">
+        <div class="row">
+            <div class="col-3">
+                <div class="col-3">
+                    <a class="linkBtn" style="background-color: green;color: white;" 
+                    href="{{url_for('reload')}}">
+                        reload
+                    </a>
+                </div>
+            </div>
+        </div>
+        <hr style="margin-top: 0em;">
+        <h3 class="text-center"> Your Contributions </h3>
+        <br>
+        <div>
+            <div class="row text-center">
+                <div class="col">
+                    <h4>Songs : {{user.len[0]}}</h4>
+                </div>
+                <div class="col">
+                    <h4>Lyrics : {{user.len[1]}}</h4>
+                </div>
+                <div class="col">
+                    <h4>Albums : {{user.len[2]}}</h4>
+                </div>
+            </div>
+        </div>
+        <hr style="margin-top: 0em;">
+        <br>
+        <div class="container">
+            <div class="row">
+                <h3 class="text-center"> Add </h3>
+            </div>
+            <br>
+            <div class="row text-center justify-content-center">
+                    <div class="col-3">
+                        <a href="{{url_for('AddSong')}}" class="linkBtn">Song</a>
+                    </div>
+                    <div class="col-1"></div>
+                    <div class="col-3">
+                        <a href="{{url_for('AddLyrics')}}" class="linkBtn">Lyrics</a>
+                    </div>
+                    <div class="col-1"></div>
+                    <div class="col-3">
+                        <a href="{{url_for('AddAlbum')}}" class="linkBtn">Album</a>
+                    </div>
+            </div>
+            <br>
+            <br>
+            <hr>
+            <div class="row">
+                <h3 class="text-center"> View Stats </h3>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-3 data">
+                    <h4 class="text-center">
+                        <a href="{{url_for('CreatorSongs')}}" style="text-decoration: none;">
+                            Songs
+                        </a>
+                    </h4>
+                </div>
+                <div class="col-1"></div>
+                <div class="col-3 data">
+                    <h4 class="text-center">
+                        <a href="{{url_for('CreatorLyrics')}}" style="text-decoration: none;">
+                            Lyrics
+                        </a>
+                    </h4>
+                </div>
+                <div class="col-1"></div>
+                <div class="col-3 data">
+                    <h4 class="text-center">
+                        <a href="{{url_for('CreatorAlbums')}}" style="text-decoration: none;">
+                            Albums
+                        </a>
+                    </h4>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

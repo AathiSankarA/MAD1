@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title> Creators </title>
+        <meta name="description" content>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link
+            href="{{url_for('static' , filename = '/Style/bootstrap.css')}}"
+            rel="stylesheet">
+        <style>
+            body{
+                background-color: rgb(255, 216, 87);
+            }
+            .centerContainer{
+                background-color: aqua;
+                border-radius: 4%;
+                padding: 2%;
+                left: 50%;
+                bottom: 50%;
+                transform: translate(-50%,50%);
+            }
+            .linkBtn {
+                padding: 14px 25px;
+                background-color: green;
+                color: white;
+                text-align: center;
+                text-decoration: none;
+                display: inline-block;
+                border-radius: 5px;
+            }
+            .data{
+                background-color: aqua;
+                border-radius: 50%;
+            }
+            table,th,td{
+                border: 3px solid black;
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="jumbotron">
+            <div class="row">
+                <div class="col-2 text-left">
+                    <a style="background-color: rgb(255, 0, 0);color: white;"
+                        class="linkBtn" href="{{ url_for('logout') }}"> Logout
+                    </a>
+                </div>
+                <div class="col-2">
+                    <a
+                        style="background-color: rgb(0, 255, 13);color: rgb(0, 0, 0);"
+                        class="linkBtn" href="{{ url_for('Admin') }}"> Back
+                    </a>
+                </div>
+                <div class="col-4 text-center">
+                    <h1>Creators</h1>
+                </div>
+                <div class="col-2"></div>
+                <div class="col-2" style="text-align: right; margin-right: 0%;">
+                    <h6>
+                        User Name
+                    </h6>
+                    <h4>
+                        {{user.userName}}
+                    </h4>
+                </div>
+            </div>
+        </div>
+        <hr style="margin-top: -0.5em; margin-bottom: 0em;">
+        <div class="container">
+            <div class="row">
+                <h3>Pending Approvals</h3>
+            </div>
+            <div class="row">
+                {% if user.creators[0] == [] %}
+                <h5>No Pending Approvals</h5>
+                {% else %}
+                <div class="table-responsive" style="max-height: 15em;">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>User Name</th>
+                                <th>Views</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for i in user.creators[0] %}
+                            <tr>
+                                <td>{{i.userName}}</td>
+                                <td>{{i.Views}}</td>
+                                <td>
+                                    <form
+                                        action="{{url_for('approveCreator',userName = i.userName)}}"
+                                        method="POST">
+                                        <input type="submit" value="Approve">
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <h3>Active Creators</h3>
+            </div>
+            <div class="row">
+                {% if user.creators[1] == [] %}
+                <h5>No Active Creators</h5>
+                {% else %}
+                <div class="table-responsive" style="max-height: 15em;">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>User Name</th>
+                                <th>Views</th>
+                                <th>Songs</th>
+                                <th>Lyrics</th>
+                                <th>Albums</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for i in user.creators[1] %}
+                            <tr>
+                                <td>{{i.userName}}</td>
+                                <td>{{i.totalViews}}</td>
+                                <td>{{i.songs}}</td>
+                                <td>{{i.lyrics}}</td>
+                                <td>{{i.albums}}</td>
+                                <td>
+                                    <form
+                                        action="{{url_for('removeCreator',userName = i.userName)}}"
+                                        method="POST">
+                                        <input type="submit" value="Remove">
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

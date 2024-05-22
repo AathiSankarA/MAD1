@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title> Edit </title>
+        <meta name="description" content>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link
+            href="{{url_for('static' , filename = '/Style/bootstrap.css')}}"
+            rel="stylesheet">
+        <style>
+            body{
+                background-color: rgb(255, 216, 87);
+            }
+            .centerContainer{
+                background-color: aqua;
+                border-radius: 4%;
+                padding: 2%;
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%,-50%);
+            }
+            .linkBtn {
+                padding: 14px 25px;
+                background-color: green;
+                color: white;
+                text-align: center;
+                text-decoration: none;
+                display: inline-block;
+                border-radius: 5px;
+            }
+            .data{
+                background-color: aqua;
+                border-radius: 50%;
+            }
+            table , th , td{
+                border: 3px solid black;
+            }
+        </style>
+    </head>
+    <body onload="load()">
+        <div class="jumbotron">
+            <div class="row">
+                <div class="col-2 text-left">
+                    <a style="background-color: rgb(255, 0, 0);color: white;"
+                        class="linkBtn" href="{{ url_for('logout') }}"> Logout
+                    </a>
+                </div>
+                <div class="col-2">
+                    <a
+                        style="background-color: rgb(0, 255, 13);color: rgb(0, 0, 0);"
+                        class="linkBtn"
+                        href="{{ url_for('Guest' if Type == 'Playlist' 
+                                                else 'CreatorLyrics' if Type == 'Lyrics'
+                                                else 'CreatorSongs' if Type == 'Song'
+                                                else 'CreatorAlbums') }}">
+                        Back
+                    </a>
+                </div>
+                <div class="col-4 text-center">
+                    <h1>Edit {{Type}}</h1>
+                </div>
+                <div class="col-2"></div>
+                <div class="col-2" style="text-align: right; margin-right: 0%;">
+                    <h6>
+                        User Name
+                    </h6>
+                    <h4>
+                        {{user.userName}}
+                    </h4>
+                </div>
+            </div>
+        </div>
+        <hr style="margin-top:-0.5em;margin-bottom: 0em;">
+        <div class="centerContainer">
+            <div class="container text-center justify-content-center">
+                <div class="row">
+                    {% if Type == 'Song' %}
+                    <h5 class="text-center">Update</h5>
+                    <form action method="POST">
+                        <label for="songName">Name : {{item.songName}} </label><input
+                            type="text" id="songName" name="songName"
+                            placeholder="Enter New Name">
+                        <br>
+                        <br>
+                        <label for="Language">Language : {{item.Language}} </label><input
+                            type="text" id="Language" name="Language"
+                            placeholder="Enter New Language">
+                            <input name="from" value="form" hidden>
+                            <input name="songId" value="{{item.songId}}" hidden>
+                        <br>
+                        <br>
+                        <input type="submit" value="Update">
+                    </form>
+                    {% elif Type == 'Lyrics' %}
+                    <h5 class="text-center">Updata</h5>
+                    <form action method="POST">
+                        <label for="lyricsName">Name : {{item.lyricsName}} </label><input
+                            type="text" id="lyricsName" name="lyricsName"
+                            placeholder="Enter New Name">
+                            <br>
+                            <br>
+                        <label for="Language">Language : {{item.Language}} </label><input
+                            type="text" id="Language" name="Language"
+                            placeholder="Enter New Language">
+                            <br>
+                            <br>
+                        <input name="from" value="form" hidden>
+                        <input name="lyricsId" value="{{item.lyricsId}}" hidden>
+                        <input type="submit" value="Update">
+                    </form>
+                    {% elif Type == 'Album' %}
+                    <h5 class="text-center">Update</h5>
+                    <form action method="POST">
+                        <label for="albumName">Name : {{item.albumName}} </label><input
+                            type="text" id="albumName" name="albumName"
+                            placeholder="Enter New Name">
+                            <br>
+                        <br>
+                        <label for="Genre">Genre : {{item.Genre}} </label><input
+                            type="text" id="Genre" name="Genre"
+                            placeholder="Enter New Genre">
+                            <br>
+                            <br>
+                        <div
+                            class="overflow-auto text-center justify-content-center"
+                            style="max-height: 7em; width: 20em; background-color: aquamarine;
+                     position: relative; left: 50%; transform: translate(-50%,0%);">
+                            <label>Choose songs </label>
+                            <br>
+                            <div class="row">
+                                {% for i in user.songs %}
+                                    <div class="col-6" style="text-align: right;" id="sngs">
+                                        <label for="{{songId}}">{{i.songName}}</label>
+                                    <input type="checkbox" name="songs" value="{{i.songName}}" id="{{i.songId}}" onclick="act('{{i.songId}}','{{i.songName}}')"
+                                        {% if i.songId in item.Songs %} checked {% endif %} multiple>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                            <br>
+                            <input name="from" value="form" hidden>
+                        <input name="dat" id="dat" value="{{item.Songs}}" hidden>
+                        <input name="albumId" value="{{item.albumId}}" hidden>
+                        <input type="submit" value="Update">
+                    </form>
+                    {% elif Type == 'Playlist' %}
+                    <h5 class="text-center">Update</h5>
+                    <form action method="POST">
+                        <label for="playlistName">Name : {{item.playlistName}} </label><input
+                            type="text" id="playlistName" name="playlistName"
+                            placeholder="Enter New Name">
+                            <div
+                            class="overflow-auto text-center justify-content-center"
+                            style="max-height: 7em; width: 20em; background-color: aquamarine;
+                            position: relative; left: 50%; transform: translate(-50%,0%);">
+                            <label>Choose songs </label>
+                            <br>
+                        <div class="row">
+                            {% for i in user.songs %}
+                                <div class="col-6" style="text-align: right;" id="sngs">
+                                    <label for="{{songId}}">{{i.songName}}</label>
+                                    <input type="checkbox" name="songs" value="{{i.songName}}" id="{{i.songId}}" onclick="act('{{i.songId}}','{{i.songName}}')"
+                                        {% if i.songId in item.Songs %} checked {% endif %} multiple>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        </div>
+                        <input name="from" value="form" hidden>
+                        <input name="dat" id="dat" value="{{item.Songs}}" hidden>
+                        <input name="playlistId" value="{{item.playlistId}}" hidden>
+                        <input type="submit" value="Update">
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% if Type == 'Playlist' or Type == 'Album' %}
+        <div class="overflow-auto text-center justify-content-center" id="list"
+                     style="height: 7em; width: 15%; background-color: aquamarine;
+                     position: absolute; left: 5%;top: 40%;">
+        <script>
+            let b = document.getElementById('dat')
+            let e = document.getElementById('list')
+            var arr = []
+            var arr1 = []
+            function act(data , dta){
+                var x = document.getElementById(data)
+                if (x.checked){
+                    arr1.push(data)
+                    arr.push(dta)
+                } 
+                else {
+                    arr1.splice(arr.indexOf(dta),1)
+                    arr.splice(arr.indexOf(dta),1)
+                }
+                let chi = e.lastElementChild;
+                while (chi) {
+                    e.removeChild(chi);
+                    chi = e.lastElementChild;
+                }
+                let text = '<b>Selected Songs</b> <br>'
+                for (let k of arr){
+                    text += k + '<br>'
+                }
+                e.innerHTML = text
+                b.setAttribute('value',''+arr1)
+            }
+            function load(){
+                let text = '<b>Selected Songs</b> <br>'
+                var tmp = b.getAttribute('value')
+                arr1 = tmp.replace(/\[|\]| /g,'').split(',')
+                for (var i= 0;i < arr1.length ; i ++){
+                    k = arr1[i]
+                    var g = document.getElementById(k)
+                    arr.push(g.getAttribute('value'))
+                    text += '' + g.getAttribute('value') + '<br>'
+                }
+                e.innerHTML = text
+                b.setAttribute('value', ''+arr1)
+            }
+        </script>
+        {% endif %}
+    </body>
+</html>

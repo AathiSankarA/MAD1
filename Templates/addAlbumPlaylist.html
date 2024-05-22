@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title> {%if user.userType == 'Creator'%}Album{%else%}Playlist{% endif %} </title>
+        <meta name="description" content>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link
+            href="{{url_for('static' , filename = '/Style/bootstrap.css')}}"
+            rel="stylesheet">
+        <style>
+            body{
+                background-color: rgb(255, 216, 87);
+            }
+            .centerContainer{
+                background-color: aqua;
+                border-radius: 4%;
+                padding: 2%;
+                position: absolute;
+                left: 50%;
+                bottom: 50%;
+                transform: translate(-50%,50%);
+            }
+            .linkBtn {
+                padding: 14px 25px;
+                background-color: green;
+                color: white;
+                text-align: center;
+                text-decoration: none;
+                display: inline-block;
+                border-radius: 5px;
+            }
+            .data{
+                background-color: aqua;
+                border-radius: 50%;
+            }
+        </style>
+    </head>
+    <body onload="load()">
+        <div class="jumbotron">
+            <div class="row">
+                <div class="col-2 text-left">
+                    <a style="background-color: rgb(255, 0, 0);color: white;"
+                        class="linkBtn" href="{{ url_for('logout') }}"> Logout
+                    </a>
+                </div>
+                <div class="col-2">
+                    <a style="background-color: rgb(0, 255, 13);color: rgb(0, 0, 0);"
+                        class="linkBtn" href="{{ url_for(user.userType) }}"> Back
+                    </a>
+                </div>
+                <div class="col-4 text-center">
+                    <h1>Add {%if user.userType == 'Creator'%}Album{%else%}Playlist{% endif %}</h1>
+                </div>
+                <div class="col-2"></div>
+                <div class="col-2" style="text-align: right; margin-right: 0%;">
+                    <h6>
+                        User Name
+                    </h6>
+                    <h4>
+                        {{user.userName}}
+                    </h4>
+                </div>
+            </div>
+        </div>
+        <div class="centerContainer">
+            <form method="POST" action="{{url_for('AddAlbum' if user.userType == 'Creator' else 'CreatePlaylist')}}">
+                <div style="text-align: right;">
+                    <label>{%if user.userType == 'Creator'%}Album Name{%else%}Playlist Name{% endif %}</label>
+                    <input type="text" name="{{'albumName' if user.userType == 'Creator' else 'playlistName'}}" required/>
+                </div>
+                {% if user.userType == 'Creator'%}
+                <div style="text-align: right;">
+                    <label>Genre</label>
+                    <input type="text" name="Genre" required/>
+                </div>
+                {% endif %}
+                <br>
+                <br>
+                <div class="overflow-auto text-center justify-content-center" 
+                     style="max-height: 7em; width: 20em; background-color: aquamarine;
+                     position: relative; left: 50%; transform: translate(-50%,-40%);">
+                    <label>Choose songs </label>
+                    <br>
+                    <div class="row">
+                    {% for i in user.songs %}
+                        <div class="col-6" style="text-align: right;" id="sngs">
+                            <label for="{{songId}}">{{i.songName}}</label>
+                            <input onclick="act('{{i.songId}}','{{i.songName}}')" type="checkbox" name="songs" id="{{i.songId}}" value="{{i.songId}}" multiple>
+                        </div>
+                    {% endfor %}
+                    </div>
+                </div>
+                <input name="Songs" id="dat" value="" hidden>
+                <div class="text-center">
+                    <div style="color: red;">
+                        {% if message %}
+                        {{message}}
+                        <br>
+                        {{message1}}
+                        {% endif %}
+                    </div>
+                    <input type="submit" value="Submit"/>
+                </div>
+            </form>
+        </div>
+        <div class="overflow-auto text-center justify-content-center" id="list"
+                     style="height: 7em; width: 15%; background-color: aquamarine;
+                     position: absolute; left: 5%;top: 40%;">
+        </div>
+        <script>
+            let b = document.getElementById('dat')
+            let e = document.getElementById('list')
+            let br = document.createElement('br')
+            var arr = []
+            var arr1 = []
+            function act(data , dta){
+                var x = document.getElementById(data)
+                if (x.checked){
+                    arr1.push(data)
+                    arr.push(dta)
+                } 
+                else {
+                    arr1.splice(arr.indexOf(dta),1)
+                    arr.splice(arr.indexOf(dta),1)
+                }
+                let chi = e.lastElementChild;
+                while (chi) {
+                    e.removeChild(chi);
+                    chi = e.lastElementChild;
+                }
+                let text = '<b>Selected Songs</b> <br>'
+                for (let k of arr){
+                    text += k + '<br>'
+                }
+                e.innerHTML = text
+                b.setAttribute('value',''+arr1)
+            }
+            function load(){
+                let text = '<b>Selected Songs</b> <br>'
+                e.innerHTML = text
+            }
+        </script>
+    </body>
+</html>
